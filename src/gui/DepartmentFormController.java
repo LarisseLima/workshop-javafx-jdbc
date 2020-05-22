@@ -27,9 +27,9 @@ public class DepartmentFormController implements Initializable {
 
 	private Department entity;
 
-	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
-
 	private DepartmentService service;
+
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	@FXML
 	private TextField txtId;
@@ -46,6 +46,18 @@ public class DepartmentFormController implements Initializable {
 	@FXML
 	private Button btCancel;
 
+	public void setDepartment(Department entity) {
+		this.entity = entity;
+	}
+
+	public void setDepartmentService(DepartmentService service) {
+		this.service = service;
+	}
+
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
+	}
+
 	@FXML
 	public void onBtSaveAction(ActionEvent event) {
 		if (entity == null) {
@@ -59,11 +71,9 @@ public class DepartmentFormController implements Initializable {
 			service.saveOrUpdate(entity);
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
-		}
-		catch (ValidationException e) {
+		} catch (ValidationException e) {
 			setErrorMessages(e.getErrors());
-		}
-		catch (DbException e) {
+		} catch (DbException e) {
 			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
@@ -94,27 +104,13 @@ public class DepartmentFormController implements Initializable {
 	}
 
 	@FXML
-	public void onBtCancelAction() {
-		System.out.println("onBtCancelAction");
-
-	}
-
-	public void setDepartment(Department entity) {
-		this.entity = entity;
-
-	}
-
-	public void setDepartmentService(DepartmentService service) {
-		this.service = service;
-	}
-
-	public void subscribeDataChangeListener(DataChangeListener listener) {
-		dataChangeListeners.add(listener);
+	public void onBtCancelAction(ActionEvent event) {
+		Utils.currentStage(event).close();
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-
+		initializeNodes();
 	}
 
 	private void initializeNodes() {
